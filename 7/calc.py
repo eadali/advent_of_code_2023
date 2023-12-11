@@ -1,16 +1,16 @@
 import numpy as np
 
-file = open('example.txt', 'r')
+file = open('input.txt', 'r')
 lines = file.readlines()
 
 
 
-def compare(hand1, hand2):
-    for index in range(len(hand1)):
-        if hand1[index] > hand2[index]:
-            return 0
-        if hand1[index] < hand2[index]:
-            return 1
+# def compare(hand1, hand2):
+#     for index in range(len(hand1)):
+#         if hand1[index] > hand2[index]:
+#             return 0
+#         if hand1[index] < hand2[index]:
+#             return 1
 
 
 
@@ -56,7 +56,7 @@ def string_to_number(line):
 
 
 values = np.zeros((len(lines), 6))
-bets = np.zeros((len(lines), 1))
+bets = np.zeros((len(lines)))
 for index, line in enumerate(lines):
     first, second = line.split(' ')
     hand = string_to_number(first)
@@ -66,7 +66,22 @@ for index, line in enumerate(lines):
     values[index, 1:] = hand
     bets[index] = bet
 
+values_tr = np.transpose(values)
 print(values)
+print(values_tr)
+
+
+
+sortedd = np.lexsort(values_tr[::-1,:])
+ordered_bets = bets[sortedd]
+total = 0
+for i in range(len(ordered_bets)):
+    total = total + (i+1) * ordered_bets[i]
+
+print(total)
+
+# print(values)
+# print(sortedd)
 # print(bets)
 
 
