@@ -12,26 +12,33 @@ lines = file.readlines()
 
 
 def calc_value(hand):
-    _, counts = np.unique(hand, return_counts=True)
-    if 5 in counts:
-        return 10
+    max_val = 0
+    for i in range(1, 15):
+        hand_ = hand.copy()
+        hand_[hand_ == 1] = i
+        _, counts = np.unique(hand_, return_counts=True)
+        if 5 in counts:
+            max_val = max(max_val, 10)
 
-    if 4 in counts:
-        return 9
+        if 4 in counts:
+            max_val = max(max_val, 9)
 
-    if 3 in counts:
-        if 2 in counts:
-            return 8
-        else:
-            return 7
+        if 3 in counts:
+            if 2 in counts:
+                max_val = max(max_val, 8)
+            else:
+                max_val = max(max_val, 7)
 
-    if np.count_nonzero(counts == 2) == 2:
-        return 6
+        if np.count_nonzero(counts == 2) == 2:
+            max_val = max(max_val, 6)
 
-    if np.count_nonzero(counts == 2) == 1:
-        return 5
+        if np.count_nonzero(counts == 2) == 1:
+            max_val = max(max_val, 5)
 
-    return 4
+        max_val = max(max_val, 4)
+        print(i, max_val)
+    # print('--------------')
+    return max_val
 
 
 def string_to_number(line):
@@ -40,7 +47,7 @@ def string_to_number(line):
         if char == 'T':
             hand.append(10)
         elif char == 'J':
-            hand.append(11)
+            hand.append(1)
         elif char == 'Q':
             hand.append(12)
         elif char == 'K':
@@ -49,7 +56,7 @@ def string_to_number(line):
             hand.append(14)
         else:
             hand.append(int(char))
-    return hand
+    return np.array(hand)
 
 
 values = np.zeros((len(lines), 6))
@@ -57,6 +64,7 @@ bets = np.zeros((len(lines)))
 for index, line in enumerate(lines):
     first, second = line.split(' ')
     hand = string_to_number(first)
+    print(hand)
     value = calc_value(hand)
     bet = int(second)
     values[index, 0] = value
@@ -65,7 +73,7 @@ for index, line in enumerate(lines):
 
 values_tr = np.transpose(values)
 print(values)
-print(values_tr)
+# print(values_tr)
 
 
 sortedd = np.lexsort(values_tr[::-1, :])
